@@ -4,6 +4,7 @@
 /dist
 /tmp
 /out-tsc
+/library-services/target
 
 # dependencies
 /node_modules

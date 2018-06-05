@@ -58,7 +58,14 @@
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-json-provider</artifactId>
             <version>${jackson-2-version}</version>
-        </dependency>        
+        </dependency>     
+        
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.7</version>
+        </dependency>
+   
         <!-- Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
