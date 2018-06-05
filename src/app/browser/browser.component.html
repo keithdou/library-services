@@ -1,0 +1,54 @@
+<p-table  #dt
+         [value]="currentPage"
+         [responsive]="true"
+         [rows]="pageSize" 
+         [lazy]="true" (onLazyLoad)="lazyLoadBooks($event)"
+         [paginator]="true" 
+         selectionMode="single" 
+         [totalRecords]="totalRecords" [loading]="loading"
+         (onRowSelect)="onRowSelect($event)" dataKey="title"
+         filterDelay="700">    
+    <ng-template pTemplate="header" let-book>
+        <tr>
+             <th>Title</th>
+             <th>Author</th>
+             <th>Call Number</th>
+             <th>Item Id</th>
+             <th [pSortableColumn]="'itemType'">
+                Item Type
+                <p-sortIcon [field]="'itemType'"></p-sortIcon>
+             </th>
+             <th [pSortableColumn]="'status'">
+                Status
+                <p-sortIcon [field]="'status'"></p-sortIcon>
+             </th>
+             <th [pSortableColumn]="'language'">
+                Language
+                <p-sortIcon [field]="'language'"></p-sortIcon>
+             </th>
+             <th [pSortableColumn]="'age'">
+                Age
+                <p-sortIcon [field]="'age'"></p-sortIcon>
+             </th>
+             <th>Date</th>
+             <th [pSortableColumn]="'checkoutLibrary'">
+                Checkout Library
+                <p-sortIcon [field]="'checkoutLibrary'"></p-sortIcon>
+             </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-book>
+        <tr  [pSelectableRow]="book">
+          <td>{{book.title}}</td>
+          <td>{{book.author}}</td>
+          <td>{{book.callNumber}}</td>
+          <td>{{book.itemId}}</td>
+          <td>{{book.itemType}}</td>
+          <td>{{book.status}}</td>
+          <td>{{book.language}}</td>
+          <td>{{book.age}}</td>
+          <td>{{book.date}}</td>
+          <td>{{book.checkoutLibrary}}</td>
+        </tr>
+    </ng-template>
+</p-table>
