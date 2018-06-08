@@ -1,6 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { LibraryServicesService } from './library-browser.service';
+import { LibraryServicesService } from './library-services.service';
 
 describe('LibraryServicesService', () => {
   beforeEach(() => {

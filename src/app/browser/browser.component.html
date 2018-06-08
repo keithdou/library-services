@@ -1,54 +1,160 @@
-<p-table  #dt
-         [value]="currentPage"
-         [responsive]="true"
-         [rows]="pageSize" 
-         [lazy]="true" (onLazyLoad)="lazyLoadBooks($event)"
-         [paginator]="true" 
-         selectionMode="single" 
-         [totalRecords]="totalRecords" [loading]="loading"
-         (onRowSelect)="onRowSelect($event)" dataKey="title"
-         filterDelay="700">    
-    <ng-template pTemplate="header" let-book>
-        <tr>
-             <th>Title</th>
-             <th>Author</th>
-             <th>Call Number</th>
-             <th>Item Id</th>
-             <th [pSortableColumn]="'itemType'">
-                Item Type
-                <p-sortIcon [field]="'itemType'"></p-sortIcon>
-             </th>
-             <th [pSortableColumn]="'status'">
-                Status
-                <p-sortIcon [field]="'status'"></p-sortIcon>
-             </th>
-             <th [pSortableColumn]="'language'">
-                Language
-                <p-sortIcon [field]="'language'"></p-sortIcon>
-             </th>
-             <th [pSortableColumn]="'age'">
-                Age
-                <p-sortIcon [field]="'age'"></p-sortIcon>
-             </th>
-             <th>Date</th>
-             <th [pSortableColumn]="'checkoutLibrary'">
-                Checkout Library
-                <p-sortIcon [field]="'checkoutLibrary'"></p-sortIcon>
-             </th>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-book>
-        <tr  [pSelectableRow]="book">
-          <td>{{book.title}}</td>
-          <td>{{book.author}}</td>
-          <td>{{book.callNumber}}</td>
-          <td>{{book.itemId}}</td>
-          <td>{{book.itemType}}</td>
-          <td>{{book.status}}</td>
-          <td>{{book.language}}</td>
-          <td>{{book.age}}</td>
-          <td>{{book.date}}</td>
-          <td>{{book.checkoutLibrary}}</td>
-        </tr>
-    </ng-template>
-</p-table>
+    <div class="ui-g" style="background-color: lightGray">
+        <div class="ui-lg-12 ui-md-12">
+      <div>
+        <div class="ui-g-12 ui-md-6 ui-lg-1">
+            Language:
+        </div>
+        <div class="ui-g-12 ui-md-6 ui-lg-3">
+            <p-dropdown [options]="languageList" 
+                formControlName="selectedLanguage" 
+                scrollHeight="400px"
+                optionLabel="name"
+                (onChange)="onLanguageChange($event)">
+            </p-dropdown>
+        </div>
+        <div class="ui-g-12 ui-md-6 ui-lg-1">
+            Library:
+        </div>
+        <div class="ui-g-12 ui-md-6 ui-lg-3">
+            <p-dropdown [options]="libraryList" 
+                formControlName="selectedLibrary" 
+                scrollHeight="400px"
+                optionLabel="name"
+                (onChange)="onLibraryChange($event)">
+            </p-dropdown>
+        </div>
+        <div class="ui-g-12 ui-md-6 ui-lg-2">
+            <p-button label="Refresh" 
+              (onClick)="refresh($event)">   
+            </p-button>
+        </div>
+        <div class="ui-g-12 ui-md-6 ui-lg-2">
+            Total Records: {{totalRecords}}
+        </div> 
+    </div>
+    </div>
+    </div>
+
+    <p-table  #dt
+             [value]="currentPage"
+             [responsive]="true"
+             [rows]="pageSize" 
+             [rowsPerPageOptions]="[16,12,10]"
+             [lazy]="true" (onLazyLoad)="lazyLoadBooks($event)"
+             [paginator]="true" 
+             selectionMode="single" 
+             [totalRecords]="totalRecords" [loading]="loading"
+             (onRowSelect)="onRowSelect($event)" dataKey="itemId"
+             filterDelay="700"
+             [styleClass]="'space-top'">    
+        <ng-template pTemplate="header" let-book>
+            <tr>
+                 <th>Title</th>
+                 <th>Author</th>
+                 <th>Call Number</th>
+                 <th>Item Id</th>
+                 <th [pSortableColumn]="'itemType'">
+                    Item Type
+                    <p-sortIcon [field]="'itemType'"></p-sortIcon>
+                 </th>
+                 <th [pSortableColumn]="'status'">
+                    Status
+                    <p-sortIcon [field]="'status'"></p-sortIcon>
+                 </th>
+                 <th [pSortableColumn]="'language'">
+                    Language
+                    <p-sortIcon [field]="'language'"></p-sortIcon>
+                 </th>
+                 <th [pSortableColumn]="'age'">
+                    Age
+                    <p-sortIcon [field]="'age'"></p-sortIcon>
+                 </th>
+                 <th>Date</th>
+                 <th [pSortableColumn]="'checkoutLibrary'">
+                    Checkout Library
+                    <p-sortIcon [field]="'checkoutLibrary'"></p-sortIcon>
+                 </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-ix ="rowIndex" let-book>
+            <tr [pSelectableRow]="book" 
+              [ngClass]="ix % 2 == 0 ? 'even-column' : 'odd-column'"
+              style="word-wrap: break-word">
+              <td>{{book.title}}</td>
+              <td>{{book.author}}</td>
+              <td>{{book.callNumber}}</td>
+              <td>{{book.itemId}}</td>
+              <td>{{book.itemType}}</td>
+              <td>{{book.status}}</td>
+              <td>{{book.language}}</td>
+              <td>{{book.age}}</td>
+              <td>{{formatDate(book.date)}}</td>
+              <td>{{book.checkoutLibrary}}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+    <p-dialog header="{{dialogueTitle}}" 
+        [(visible)]="displayDetails"
+        [resizable] = false>
+        <div *ngIf="selectedBook">
+            <p-scrollPanel [style]="{width: '100%', height: '600'}" styleClass="custom">
+            <div class="ui-g">
+                    <div class="ui-g-12 ui-md-2 ui-lg-2">
+                        <b>Title</b>
+                    </div>
+                    <div class="ui-g-12 ui-md-10 ui-lg-10">
+                        {{selectedBook.title}}
+                    </div>
+                    <div class="ui-g-12 ui-md-2 ui-lg-2">
+                        <b>Author</b>
+                    </div>
+                    <div class="ui-g-12 ui-md-10 ui-lg-10">
+                        {{selectedBook.author}}
+                    </div>
+                    <div class="ui-g-12 ui-md-2 ui-lg-2">
+                        <b>Language</b>
+                    </div>
+                    <div class="ui-g-12 ui-md-10 ui-lg-10">
+                        {{selectedBook.language}}
+                    </div>
+                    <div class="ui-g-12 ui-md-2 ui-lg-2">
+                        <b>Item Type</b>
+                    </div>
+                    <div class="ui-g-12 ui-md-10 ui-lg-10">
+                        {{selectedBook.itemType}}
+                    </div>
+                    <div class="ui-g-12 ui-md-2 ui-lg-2">
+                        <b>Checkout Library</b>
+                    </div>
+                    <div class="ui-g-12 ui-md-10 ui-lg-10">
+                        {{selectedBook.checkoutLibrary}}
+                    </div>
+                    <div class="ui-g-12 ui-md-2 ui-lg-2">
+                        <b>Date</b>
+                    </div>
+                    <div class="ui-g-12 ui-md-10 ui-lg-10">
+                        {{formatDate(selectedBook.date)}}
+                    </div>
+                    <div class="ui-g-12 ui-md-2 ui-lg-2">
+                        <b>Status</b>
+                    </div>
+                    <div class="ui-g-12 ui-md-10 ui-lg-10">
+                        {{selectedBook.status}}
+                    </div>
+                    <div class="ui-g-12 ui-md-2 ui-lg-2">
+                        <b>Call Number</b>
+                    </div>
+                    <div class="ui-g-12 ui-md-10 ui-lg-10">
+                        {{selectedBook.callNumber}}
+                    </div>
+                    <div class="ui-g-12 ui-md-2 ui-lg-2">
+                        <b>Age</b>
+                    </div>
+                    <div class="ui-g-12 ui-md-10 ui-lg-10">
+                        {{selectedBook.age}}
+                    </div>
+            </div>      
+        </p-scrollPanel>
+         </div>
+    </p-dialog>

@@ -10,3 +10,8 @@ export class Book {
 	date	  		: number;
 	checkoutLibrary	: string;
 }
+
+export class BookList {
+	totalRecordCount : number;
+	books            : Book[];
+}

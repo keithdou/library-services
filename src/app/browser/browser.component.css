@@ -1,0 +1,16 @@
+.ui-dialog {
+	width: 80% !important;
+	height: 80% !important;
+}
+
+.space-top {
+	margin-top : 1em !important;
+}
+
+.even-column {
+	background-color: #e5eefc !important;
+}
+
+.odd-column {
+	background-color: #bcd2f4 !important;
+}

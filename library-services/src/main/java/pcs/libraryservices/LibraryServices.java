@@ -46,16 +46,16 @@ public class LibraryServices {
     private static final String PAGE_NUMBERE_PARAM = "pageNumber";
     private static final String ORDER_BY_PARAM = "orderBy";
     private static final String SORT_DIRECTION = "sortDirection";
-    private static final String[] CONTROL_PARAMS = {PAGE_NUMBERE_PARAM, PAGE_SIZE_PARAM, ORDER_BY_PARAM,SORT_DIRECTION};
+    private static final String[] CONTROL_PARAMS = {PAGE_NUMBERE_PARAM, PAGE_SIZE_PARAM, ORDER_BY_PARAM, SORT_DIRECTION};
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/books")
-    public Response getBooks(@Context HttpServletRequest request, @Context HttpServletResponse response, @Context UriInfo ui,
-                             @DefaultValue("1") @QueryParam(PAGE_NUMBERE_PARAM) int pageNumber, 
-                             @DefaultValue("16") @QueryParam(PAGE_SIZE_PARAM) int pageSize,
-                             @DefaultValue("date") @QueryParam(ORDER_BY_PARAM) String sortColumn, 
-                             @DefaultValue("D") @QueryParam(SORT_DIRECTION) String sortDirection) {
+    public Response listBooks(@Context HttpServletRequest request, @Context HttpServletResponse response, @Context UriInfo ui,
+            @DefaultValue("1") @QueryParam(PAGE_NUMBERE_PARAM) int pageNumber,
+            @DefaultValue("16") @QueryParam(PAGE_SIZE_PARAM) int pageSize,
+            @DefaultValue("date") @QueryParam(ORDER_BY_PARAM) String sortColumn,
+            @DefaultValue("D") @QueryParam(SORT_DIRECTION) String sortDirection) {
 
         LOG.debug("getBooks starts");
 
@@ -86,17 +86,19 @@ public class LibraryServices {
                 }
             });
         });
-        
+
         if (!query.containsKey("itemId")) {
             // There are some invlaid item ids -we only want ints and longs
-            List<Integer> validTypes = Arrays.asList(new Integer[]{16,18});
-            query.append("itemId",new BasicDBObject("$type" , validTypes));
+            List<Integer> validTypes = Arrays.asList(new Integer[]{16, 18});
+            query.append("itemId", new BasicDBObject("$type", validTypes));
         }
         LOG.debug("Query{}", query);
         LOG.debug("Page number is {}", pageNumber);
-        LOG.debug("sort by {} {}", sortColumn,sortDirection);
+        LOG.debug("sort by {} {}", sortColumn, sortDirection);
 
         List<Book> bookList = new ArrayList<>();
+        long recordCount = bookCollection.count(query);
+        LOG.debug("Record count={}",recordCount);
 
         bookCollection.find(query)
                 .sort(new BasicDBObject(sortColumn, sortDirection.equals("A") ? 1 : -1))
@@ -106,7 +108,57 @@ public class LibraryServices {
                     //LOG.debug("Adding {}", book);
                     bookList.add(book);
                 });
+        
+        return Response.ok().entity(new ListBooksResponse(recordCount, bookList)).build();
+    }
 
-        return Response.ok().entity(bookList).build();
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/languages")
+    public Response listLanguages() {
+
+        MongoClient mongoClient = MongoClientProvider.getClient();
+        MongoDatabase database = mongoClient.getDatabase("library");
+        
+        BasicDBObject distinctCommand = new BasicDBObject()
+                .append("distinct", "books")
+                .append("key","language");
+                
+        LOG.debug("distinctCommand={}",distinctCommand);        
+        
+        Document languageDoc = database.runCommand(distinctCommand);
+        
+        LOG.debug("languages={}",languageDoc);
+        
+        List<String> languageList = (List) languageDoc.get("values");
+        
+        languageList.sort((p1, p2) -> p1.compareTo(p2));
+        
+        return Response.ok().entity(languageList).build();
+    }
+    
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/libraries")
+    public Response listLibraries() {
+
+        MongoClient mongoClient = MongoClientProvider.getClient();
+        MongoDatabase database = mongoClient.getDatabase("library");
+        
+        BasicDBObject distinctCommand = new BasicDBObject()
+                .append("distinct", "books")
+                .append("key","checkoutLibrary");
+                
+        LOG.debug("distinctCommand={}",distinctCommand);        
+        
+        Document languageDoc = database.runCommand(distinctCommand);
+        
+        LOG.debug("languages={}",languageDoc);
+        
+        List<String> languageList = (List) languageDoc.get("values");
+        
+        languageList.sort((p1, p2) -> p1.compareTo(p2));
+        
+        return Response.ok().entity(languageList).build();
     }
 }
