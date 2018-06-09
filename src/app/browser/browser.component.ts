@@ -111,7 +111,7 @@ export class BrowserComponent implements OnInit {
 		//201805091234
 		let dt = date.toString();
 		return dt.substr(6,2) + "/" + dt.substr(4,2) + "/" + dt.substr(0,4)
-			+ " " + dt.substr(8,2) + ":" + dt.substr(10,2));
+			+ " " + dt.substr(8,2) + ":" + dt.substr(10,2);
 	}
 
 	showDialog() {
