@@ -4,7 +4,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Dependencies
 
-This project was built using PrimeNg version 6.  (still beta at 8/6/2018):
+This project was built using PrimeNG version 6.  (still beta at 8/6/2018):
 
 	npm install node_modules
 	npm install primeng@6.0.0-beta.1
@@ -15,11 +15,11 @@ If you install a pre-6 version, you will also need to npm install rxjs-compat
 
 ## Rest Services
 
-A Java REST service compatible with any J2EE container is included in this project under 'library-browser'.  The service expects to find data in a MongoDB database which needs to be installed separately.  Aproxy service is used to avaoid CORS errors in development. You need to configure proxy-conf.json to point to your apps server (default is localhost:8080).
+A Java REST service compatible with any J2EE container is included in this project under 'library-browser'.  The service expects to find data in a MongoDB database which needs to be installed separately.  A proxy service is used to avoid CORS errors in development. You may need to configure proxy-conf.json to point to your apps server (default is localhost:8080).
 
 ## load data
 
-The data to be imported can be downloaded from TBA.
+The data to be imported can be downloaded from =====TBA.
 
 To import into MongoDB:
 
