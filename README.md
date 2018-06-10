@@ -2,19 +2,30 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.7.
 
-## Development server
+## Dependencies
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+This project was built using PrimeNg version 6.  (still beta at 8/6/2018):
 
+	npm install node_modules
+	npm install primeng@6.0.0-beta.1
+	npm install font-awesome
+	npm install chart.js
+
+If you install a pre-6 version, you will also need to npm install rxjs-compat
+
+## Rest Services
+
+A Java REST service compatible with any J2EE container is included in this project under 'library-browser'.  The service expects to find data in a MongoDB database which needs to be installed separately.  Aproxy service is used to avaoid CORS errors in development. You need to configure proxy-conf.json to point to your apps server (default is localhost:8080).
 
 ## load data
 
 The data to be imported can be downloaded from TBA.
 
 To import into MongoDB:
+
 	mongoimport -d library -c books --type csv --file MyDownloadedCSVFile.csv --headerline
 
-To make the column names a bit more friendly, either edit the CSV file or run the following commands in a Mongo shell:
+To make the column names a bit more code friendly, either edit the CSV file prior to import or run the following commands in a Mongo shell:
 
 	db.books.update({},{$rename : {"Title" : "title"}},false,true);
 	db.books.update({},{$rename : {"Author" : "author"}},false,true);
@@ -26,6 +37,10 @@ To make the column names a bit more friendly, either edit the CSV file or run th
 	db.books.update({},{$rename : {"Age" : "age"}},false,true);
 	db.books.update({},{$rename : {"Date" : "date"}},false,true);
 	db.books.update({},{$rename : {"Checkout Library" : "checkoutLibrary"}},false,true);	
+
+## Development server
+
+Run `npm start` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 ## Code scaffolding
 
